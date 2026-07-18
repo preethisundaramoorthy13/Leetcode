@@ -1,30 +1,28 @@
-// Last updated: 7/18/2026, 4:06:26 PM
-1import java.util.HashSet;
-2import java.util.Set;
-3
-4class Solution {
-5    public boolean isValidSudoku(char[][] board) {
-6        Set<String> seen = new HashSet<>();
-7        
-8        for (int i = 0; i < 9; i++) {
-9            for (int j = 0; j < 9; j++) {
-10                char currentVal = board[i][j];
-11                
-12                // Only validate filled cells
-13                if (currentVal != '.') {
-14                    // Unique keys for row, column, and block tracking
-15                    String rowKey = currentVal + " in row " + i;
-16                    String colKey = currentVal + " in col " + j;
-17                    String blockKey = currentVal + " in block " + (i / 3) + "-" + (j / 3);
-18                    
-19                    // If any key already exists in the set, the board is invalid
-20                    if (!seen.add(rowKey) || !seen.add(colKey) || !seen.add(blockKey)) {
-21                        return false;
-22                    }
-23                }
-24            }
-25        }
-26        
-27        return true;
-28    }
-29}
+// Last updated: 7/18/2026, 5:06:43 PM
+1class Solution {
+2    static {
+3        for (int index = 0; index < 100; index++)
+4            isValidSudoku(new char[9][9]);
+5    }
+6    public static boolean isValidSudoku(char[][] board) {
+7        int[] rowMask = new int[9];
+8        int[] columnMask = new int[9];
+9        int[] boxMask = new int[9];
+10
+11        for (int row = 0; row < 9; row++) {
+12            for (int column = 0; column < 9; column++) {
+13                if (board[row][column] == '.') continue;
+14                int bit = 1 << (board[row][column] - '1');
+15                int box = (row / 3) * 3 + column / 3;
+16
+17                if ((rowMask[row] & bit) != 0 || (columnMask[column] & bit) != 0 || (boxMask[box] & bit) != 0) return false;
+18                
+19                rowMask[row] |= bit;
+20                columnMask[column] |= bit;
+21                boxMask[box] |= bit;
+22            }
+23        }
+24
+25        return true;
+26    }
+27}
