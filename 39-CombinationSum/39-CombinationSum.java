@@ -1,27 +1,27 @@
-// Last updated: 7/18/2026, 8:07:33 AM
-1class Solution {
-2    public int jump(int[] nums) {
-3        if (nums.length <= 1) {
-4            return 0;
-5        }
-6
-7        int jumps = 0;
-8        int currentEnd = 0;
-9        int farthest = 0;
+// Last updated: 7/18/2026, 8:08:19 AM
+1import java.util.ArrayList;
+2import java.util.List;
+3
+4class Solution {
+5    public List<List<Integer>> permute(int[] nums) {
+6        List<List<Integer>> result = new ArrayList<>();
+7        backtrack(nums, new ArrayList<>(), result);
+8        return result;
+9    }
 10
-11        for (int i = 0; i < nums.length - 1; i++) {
-12            farthest = Math.max(farthest, i + nums[i]);
-13            
-14            if (i == currentEnd) {
-15                jumps++;
-16                currentEnd = farthest;
-17                
-18                if (currentEnd >= nums.length - 1) {
-19                    break;
-20                }
-21            }
-22        }
-23
-24        return jumps;
+11    private void backtrack(int[] nums, List<Integer> current, List<List<Integer>> result) {
+12        if (current.size() == nums.length) {
+13            result.add(new ArrayList<>(current));
+14            return;
+15        }
+16
+17        for (int i = 0; i < nums.length; i++) {
+18            if (current.contains(nums[i])) {
+19                continue;
+20            }
+21            current.add(nums[i]);
+22            backtrack(nums, current, result);
+23            current.remove(current.size() - 1);
+24        }
 25    }
 26}
