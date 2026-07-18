@@ -1,43 +1,31 @@
-// Last updated: 7/18/2026, 9:12:37 PM
-class Solution {
-    private int count = 0;
-
-    public int totalNQueens(int n) {
-        boolean[] cols = new boolean[n];
-        boolean[] diag1 = new boolean[2 * n];
-        boolean[] diag2 = new boolean[2 * n];
-
-        backtrack(0, n, cols, diag1, diag2);
-        return count;
-    }
-
-    private void backtrack(int row, int n,
-                           boolean[] cols,
-                           boolean[] diag1,
-                           boolean[] diag2) {
-
-        if (row == n) {
-            count++;
-            return;
-        }
-
-        for (int col = 0; col < n; col++) {
-            int d1 = row - col + n;
-            int d2 = row + col;
-
-            if (cols[col] || diag1[d1] || diag2[d2]) {
-                continue;
-            }
-
-            cols[col] = true;
-            diag1[d1] = true;
-            diag2[d2] = true;
-
-            backtrack(row + 1, n, cols, diag1, diag2);
-
-            cols[col] = false;
-            diag1[d1] = false;
-            diag2[d2] = false;
-        }
-    }
-}
+// Last updated: 7/18/2026, 9:13:59 PM
+1import java.util.ArrayList;
+2import java.util.List;
+3
+4class Solution {
+5    public String getPermutation(int n, int k) {
+6        int[] factorial = new int[n];
+7        List<Integer> numbers = new ArrayList<>();
+8        
+9        factorial[0] = 1;
+10        for (int i = 1; i < n; i++) {
+11            factorial[i] = factorial[i - 1] * i;
+12        }
+13        
+14        for (int i = 1; i <= n; i++) {
+15            numbers.add(i);
+16        }
+17        
+18        k--;
+19        StringBuilder sb = new StringBuilder();
+20        
+21        for (int i = n - 1; i >= 0; i--) {
+22            int index = k / factorial[i];
+23            sb.append(numbers.get(index));
+24            numbers.remove(index);
+25            k %= factorial[i];
+26        }
+27        
+28        return sb.toString();
+29    }
+30}
