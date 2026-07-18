@@ -1,31 +1,37 @@
-// Last updated: 7/18/2026, 8:02:19 AM
-1class Solution {
-2    public String multiply(String num1, String num2) {
-3        if (num1.equals("0") || num2.equals("0")) {
-4            return "0";
-5        }
-6        
-7        int m = num1.length(), n = num2.length();
-8        int[] pos = new int[m + n];
-9        
-10        for (int i = m - 1; i >= 0; i--) {
-11            for (int j = n - 1; j >= 0; j--) {
-12                int mul = (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
-13                int p1 = i + j, p2 = i + j + 1;
-14                int sum = mul + pos[p2];
-15                
-16                pos[p1] += sum / 10;
-17                pos[p2] = sum % 10;
-18            }
-19        }
-20        
-21        StringBuilder sb = new StringBuilder();
-22        for (int p : pos) {
-23            if (!(sb.length() == 0 && p == 0)) {
-24                sb.append(p);
-25            }
-26        }
-27        
-28        return sb.toString();
-29    }
-30}
+// Last updated: 7/18/2026, 8:02:53 AM
+class Solution {
+    public String multiply(String num1, String num2) {
+        if ("0".equals(num1) || "0".equals(num2))
+            return "0";
+        if ("1".equals(num1))
+            return num2;
+        if ("1".equals(num2))
+            return num1;
+
+        char[] c1 = num1.toCharArray();
+        char[] c2 = num2.toCharArray();
+        int m = c1.length, n = c2.length;
+
+        int[] vals = new int[m + n];
+
+        for (int i = m - 1; i >= 0; i--) {
+            int n1 = c1[i] - '0';
+            for (int j = n - 1; j >= 0; j--) {
+                int n2 = c2[j] - '0';
+                vals[i + j + 1] += n1 * n2;
+            }
+        }
+        int carry = 0;
+        for (int i = vals.length - 1; i >= 0; i--) {
+            int total = vals[i] + carry;
+            vals[i] = total % 10;
+            carry = total / 10;
+        }
+        StringBuilder sb = new StringBuilder(m + n);
+        int start = vals[0] == 0 ? 1 : 0;
+        for (int i = start; i < vals.length; i++) {
+            sb.append(vals[i]);
+        }
+        return sb.toString();
+    }
+}
