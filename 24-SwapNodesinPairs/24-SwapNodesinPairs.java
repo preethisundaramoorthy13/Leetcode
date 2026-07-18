@@ -1,37 +1,38 @@
-// Last updated: 7/18/2026, 2:07:01 AM
+// Last updated: 7/18/2026, 2:07:37 AM
 1class Solution {
-2    public int divide(int dividend, int divisor) {
-3        // Handle the unique 32-bit signed integer overflow case
-4        if (dividend == Integer.MIN_VALUE && divisor == -1) {
-5            return Integer.MAX_VALUE;
-6        }
-7        
-8        // Determine the sign of the quotient
-9        boolean isNegative = (dividend < 0) ^ (divisor < 0);
+2    public void nextPermutation(int[] nums) {
+3        if (nums == null || nums.length <= 1) return;
+4        
+5        // Step 1: Find the first decreasing element from the right
+6        int i = nums.length - 2;
+7        while (i >= 0 && nums[i] >= nums[i + 1]) {
+8            i--;
+9        }
 10        
-11        // Convert to absolute values using long to avoid integer overflow
-12        long absDividend = Math.abs((long) dividend);
-13        long absDivisor = Math.abs((long) divisor);
-14        
-15        int quotient = 0;
-16        
-17        // Perform exponential subtraction using bit shifting
-18        while (absDividend >= absDivisor) {
-19            long tempDivisor = absDivisor;
-20            long multiple = 1;
-21            
-22            // Shift left until tempDivisor is just about to exceed absDividend
-23            while (absDividend >= (tempDivisor << 1)) {
-24                tempDivisor <<= 1;
-25                multiple <<= 1;
-26            }
-27            
-28            // Subtract the largest shifted divisor from dividend
-29            absDividend -= tempDivisor;
-30            // Add the corresponding multiple to the quotient
-31            quotient += multiple;
-32        }
-33        
-34        return isNegative ? -quotient : quotient;
-35    }
-36}
+11        // Step 2: If a pivot element is found, find its successor to swap with
+12        if (i >= 0) {
+13            int j = nums.length - 1;
+14            while (nums[j] <= nums[i]) {
+15                j--;
+16            }
+17            swap(nums, i, j);
+18        }
+19        
+20        // Step 3: Reverse the elements after the pivot index i
+21        reverse(nums, i + 1, nums.length - 1);
+22    }
+23    
+24    private void swap(int[] nums, int i, int j) {
+25        int temp = nums[i];
+26        nums[i] = nums[j];
+27        nums[j] = temp;
+28    }
+29    
+30    private void reverse(int[] nums, int start, int end) {
+31        while (start < end) {
+32            swap(nums, start, end);
+33            start++;
+34            end--;
+35        }
+36    }
+37}
