@@ -1,54 +1,31 @@
-// Last updated: 7/18/2026, 8:01:06 AM
-1import java.util.AbstractList;
-2import java.util.ArrayList;
-3import java.util.List;
-4
-5class Solution {
-6private void combinations2(int index, int[] arr, int target, List<Integer> subset, List<List<Integer>> res){
-7        if(target == 0){
-8            res.add(List.copyOf(subset));
-9            return;
-10        }
-11
-12        for(int i = index; i < arr.length; i++){
-13            if(i > index && arr[i] == arr[i-1]){
-14                continue;
-15            }
-16            if (arr[i] > target) {
-17                break;
+// Last updated: 7/18/2026, 8:02:19 AM
+1class Solution {
+2    public String multiply(String num1, String num2) {
+3        if (num1.equals("0") || num2.equals("0")) {
+4            return "0";
+5        }
+6        
+7        int m = num1.length(), n = num2.length();
+8        int[] pos = new int[m + n];
+9        
+10        for (int i = m - 1; i >= 0; i--) {
+11            for (int j = n - 1; j >= 0; j--) {
+12                int mul = (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
+13                int p1 = i + j, p2 = i + j + 1;
+14                int sum = mul + pos[p2];
+15                
+16                pos[p1] += sum / 10;
+17                pos[p2] = sum % 10;
 18            }
-19            subset.add(arr[i]);
-20            combinations2(i + 1, arr, target - arr[i], subset, res);
-21            subset.removeLast();
-22        }
-23    }
-24
-25    private void getResults(int[] arr, int sum, List<List<Integer>> result) {
-26        java.util.Arrays.sort(arr);
-27        combinations2(0, arr, sum, new ArrayList<>(), result);
-28    }
-29
-30    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
-31        return new AbstractList<List<Integer>>() {
-32            List<List<Integer>> res;
-33
-34            private void init(){
-35                res = new java.util.ArrayList<>();
-36                getResults(candidates, target,res);
-37            }
-38
-39            @Override
-40            public List<Integer> get(int index) {
-41                return res.get(index);
-42            }
-43
-44            @Override
-45            public int size() {
-46                if(res == null){
-47                    init();
-48                }
-49                return res.size();
-50            }
-51        };
-52    }
-53}
+19        }
+20        
+21        StringBuilder sb = new StringBuilder();
+22        for (int p : pos) {
+23            if (!(sb.length() == 0 && p == 0)) {
+24                sb.append(p);
+25            }
+26        }
+27        
+28        return sb.toString();
+29    }
+30}
