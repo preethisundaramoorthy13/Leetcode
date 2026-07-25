@@ -1,23 +1,14 @@
-// Last updated: 7/25/2026, 2:00:19 PM
+// Last updated: 7/25/2026, 2:07:20 PM
 1class Solution {
-2    public double myPow(double x, int n) {
-3        long N = n;
-4        if (N < 0) {
-5            x = 1 / x;
-6            N = -N;
-7        }
-8
-9        double ans = 1;
-10        double currentProduct = x;
-11
-12        while (N > 0) {
-13            if (N % 2 == 1) {
-14                ans = ans * currentProduct;
-15            }
-16            currentProduct = currentProduct * currentProduct;
-17            N /= 2;
-18        }
-19
-20        return ans;
-21    }
-22}
+2    public int maxSubArray(int[] nums) {
+3        int maxSoFar = nums[0];
+4        int currentMax = nums[0];
+5
+6        for (int i = 1; i < nums.length; i++) {
+7            currentMax = Math.max(nums[i], currentMax + nums[i]);
+8            maxSoFar = Math.max(maxSoFar, currentMax);
+9        }
+10
+11        return maxSoFar;
+12    }
+13}
