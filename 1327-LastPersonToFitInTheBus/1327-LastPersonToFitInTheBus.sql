@@ -1,0 +1,16 @@
+-- Last updated: 7/31/2026, 9:36:19 AM
+# Write your MySQL query statement below
+SELECT 
+    q1.person_name
+FROM 
+    Queue q1
+JOIN 
+    Queue q2 ON q1.turn >= q2.turn
+GROUP BY 
+    q1.turn, 
+    q1.person_name
+HAVING 
+    SUM(q2.weight) <= 1000
+ORDER BY 
+    q1.turn DESC
+LIMIT 1;
