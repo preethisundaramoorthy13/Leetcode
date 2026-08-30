@@ -1,54 +1,98 @@
-// Last updated: 8/30/2026, 5:01:29 PM
-1import java.util.HashMap;
-2import java.util.Map;
-3
-4class Solution {
-5    private Map<String, Boolean> memo = new HashMap<>();
-6
-7    public boolean isScramble(String s1, String s2) {
-8        if (s1.equals(s2)) {
-9            return true;
-10        }
-11
-12        String key = s1 + "#" + s2;
-13        if (memo.containsKey(key)) {
-14            return memo.get(key);
-15        }
-16
-17        int n = s1.length();
-18
-19        // Pruning: Compare character frequencies
-20        int[] count = new int[26];
-21        for (int i = 0; i < n; i++) {
-22            count[s1.charAt(i) - 'a']++;
-23            count[s2.charAt(i) - 'a']--;
-24        }
-25
-26        for (int i = 0; i < 26; i++) {
-27            if (count[i] != 0) {
-28                memo.put(key, false);
-29                return false;
-30            }
-31        }
-32
-33        // Try every possible split point
-34        for (int i = 1; i < n; i++) {
-35            // Case 1: No swap (s1[0..i] matches s2[0..i] and s1[i..n] matches s2[i..n])
-36            if (isScramble(s1.substring(0, i), s2.substring(0, i)) &&
-37                isScramble(s1.substring(i), s2.substring(i))) {
-38                memo.put(key, true);
-39                return true;
-40            }
-41
-42            // Case 2: Swapped (s1[0..i] matches s2[n-i..n] and s1[i..n] matches s2[0..n-i])
-43            if (isScramble(s1.substring(0, i), s2.substring(n - i)) &&
-44                isScramble(s1.substring(i), s2.substring(0, n - i))) {
-45                memo.put(key, true);
-46                return true;
-47            }
-48        }
-49
-50        memo.put(key, false);
-51        return false;
-52    }
-53}
+// Last updated: 8/30/2026, 5:01:43 PM
+class Solution {
+    int[][][] memoize;
+    public boolean isScramble(String s1, String s2) {
+        int hash1 = 0;
+        int hash2 = 0;
+        int n = s1.length();
+        char[] c1 = s1.toCharArray();
+        char[] c2 = s2.toCharArray();
+        for (int i = 0; i < n; i++){
+            hash1 += c1[i];
+            hash2 += c2[i];
+        }
+        if (hash1 != hash2) return false;
+        memoize = new int[n][n][n+1]; 
+        return solve(c1, c2, hash1, hash2, 0, 0, n);
+    }
+
+    public boolean solve(char[] s1, char[] s2, int hash1, int hash2, int ind1, int ind2, int len){
+        if (len == 1) return true;
+        if (len == 2 && memoize[ind1][ind2][2] == 2){
+            return true;
+        }
+        else if (len == 2 && memoize[ind1][ind2][2] == 1){
+            return false;
+        }
+        else if (len == 2 && (s1[ind1] == s2[ind2] || s1[ind1] == s2[ind2+1])){
+            memoize[ind1][ind2][2] = 2;
+            return true;
+        } 
+        else if (len == 2){
+            memoize[ind1][ind2][2] = 1;
+            return false;
+        }
+        
+        int S1LH = 0, S2LH = 0;
+        int S1RH = hash1, S2RH = hash2;
+        int S2reverseRH = 0, S2reverseLH = hash2;
+        
+        for (int i = 0; i < len-1; i++){
+            S1LH += s1[ind1 + i];
+            S2LH += s2[ind2 + i];
+            S1RH -= s1[ind1 + i];
+            S2RH -= s2[ind2 + i];
+            S2reverseRH += s2[ind2 + len-1-i];
+            S2reverseLH -= s2[ind2 + len-1-i];
+            if (S1LH == S2LH && S1RH == S2RH){
+                int checkleft = memoize[ind1][ind2][i+1];
+                int checkright = memoize[ind1+i+1][ind2+i+1][len-i-1];
+                if (checkleft == 2 && checkright == 2){
+                    return true;
+                }
+                else if (checkleft != 1 && checkright != 1){
+                    boolean left = solve(s1, s2, S1LH, S2LH, ind1, ind2, i+1);
+                    if (left){
+                        memoize[ind1][ind2][i+1] = 2;
+                        boolean right = solve(s1, s2, S1RH, S2RH, ind1+i+1, ind2+i+1, len-i-1);
+                        if (right){
+                            memoize[ind1+i+1][ind2+i+1][len-i-1] = 2;
+                            return true;
+                        } 
+                        else{
+                            memoize[ind1+i+1][ind2+i+1][len-i-1] = 1;
+                        }
+                    }
+                    else{
+                        memoize[ind1][ind2][i+1] = 1;
+                    }
+                }
+            }
+            if (S1LH == S2reverseRH && S1RH == S2reverseLH){
+                int checkleft = memoize[ind1][ind2+len-i-1][i+1];
+                int checkright = memoize[ind1+i+1][ind2][len-i-1];
+                if (checkleft == 2 && checkright == 2){
+                    return true;
+                }
+                else if (checkleft != 1 && checkright != 1){
+                    boolean left = solve(s1, s2, S1LH, S2reverseRH, ind1, ind2+len-i-1, i+1);
+                    if (left){
+                        memoize[ind1][ind2+len-i-1][i+1] = 2;
+                        boolean right = solve(s1, s2, S1RH, S2reverseLH, ind1+i+1, ind2, len-i-1);
+                        if (right) {
+                            memoize[ind1+i+1][ind2][len-i-1] = 2;
+                            return true;
+                        }
+                        else{
+                            memoize[ind1+i+1][ind2][len-i-1] = 1;
+                        }
+                    }
+                    else{
+                        memoize[ind1][ind2+len-i-1][i+1] = 1;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+}
