@@ -1,20 +1,22 @@
-// Last updated: 8/30/2026, 12:55:50 PM
-1import java.util.ArrayList;
-2import java.util.List;
-3
-4class Solution {
-5    public List<List<Integer>> subsets(int[] nums) {
-6        List<List<Integer>> result = new ArrayList<>();
-7        backtrack(0, nums, new ArrayList<>(), result);
-8        return result;
-9    }
-10
-11    private void backtrack(int start, int[] nums, List<Integer> current, List<List<Integer>> result) {
-12        result.add(new ArrayList<>(current));
-13        for (int i = start; i < nums.length; i++) {
-14            current.add(nums[i]);
-15            backtrack(i + 1, nums, current, result);
-16            current.remove(current.size() - 1);
-17        }
-18    }
-19}
+// Last updated: 8/30/2026, 12:56:35 PM
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> ans=new ArrayList<>();
+        int n=nums.length;
+        solve(0,nums,new ArrayList<>(),ans);
+        return ans;
+    }
+    public void solve(int index,int nums[],List<Integer> lst,List<List<Integer>> ans)
+    {
+        if(index==nums.length)
+        {
+            ans.add(new ArrayList<>(lst));
+            return;
+        }
+        lst.add(nums[index]);
+        solve(index+1,nums,lst,ans);
+        lst.remove(lst.size() - 1);
+        solve(index+1,nums,lst,ans);
+       
+    }
+}
