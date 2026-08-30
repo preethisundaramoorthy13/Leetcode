@@ -1,4 +1,4 @@
-// Last updated: 8/30/2026, 1:01:55 PM
+// Last updated: 8/30/2026, 1:03:35 PM
 1class Solution {
 2    public boolean exist(char[][] board, String word) {
 3        int m = board.length;
