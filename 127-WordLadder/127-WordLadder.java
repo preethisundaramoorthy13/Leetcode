@@ -1,20 +1,34 @@
-// Last updated: 9/21/2026, 3:04:33 PM
-1class Solution {
-2    public int sumNumbers(TreeNode root) {
-3        return dfs(root, 0);
-4    }
-5
-6    private int dfs(TreeNode node, int currentSum) {
-7        if (node == null) {
-8            return 0;
-9        }
-10
-11        currentSum = currentSum * 10 + node.val;
-12
-13        if (node.left == null && node.right == null) {
-14            return currentSum;
-15        }
-16
-17        return dfs(node.left, currentSum) + dfs(node.right, currentSum);
-18    }
-19}
+// Last updated: 9/21/2026, 3:05:38 PM
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int traverse(TreeNode root, int sum) {
+        if(root == null)
+            return sum;
+        sum = sum * 10 + root.val;
+        if(root.left == null && root.right == null) 
+            return sum;
+        if(root.left != null && root.right != null)
+            return traverse(root.right, sum) + traverse(root.left, sum);
+        else if(root.left != null)
+            return traverse(root.left, sum);
+        else
+            return traverse(root.right, sum);
+    }
+    public int sumNumbers(TreeNode root) {
+        return traverse(root, 0);
+    }
+}
