@@ -1,33 +1,36 @@
-// Last updated: 9/21/2026, 3:07:06 PM
-class Solution {
-    private void qRegion(char[][] board, int y, int x){
-        board[y][x] = 'Q';
-        if (x > 0 && board[y][x-1] == 'O') qRegion(board, y, x-1);
-        if (x < board[0].length-1 && board[y][x+1] == 'O') qRegion(board, y, x+1);
-        if (y > 0 && board[y-1][x] == 'O') qRegion(board, y-1, x);
-        if (y < board.length-1 && board[y+1][x] == 'O') qRegion(board, y+1, x);
-    }
-
-    private void replaceOnBoard(char[][] board, char oldC, char newC){
-        for (int y = 0; y < board.length; y++){
-            for (int x = 0; x < board[0].length; x++){
-                if (board[y][x] == oldC) board[y][x] = newC;
-            }
-        }
-    }
-
-    public void solve(char[][] board) {
-        int m = board.length;
-        int n = board[0].length;
-        for (int i = 0; i < n; i++){ // top and bottom
-            if (board[0][i] == 'O') qRegion(board, 0, i);
-            if (board[m-1][i] == 'O') qRegion(board, m-1, i);
-        }
-        for (int i = 1; i < m-1; i++){ // left and right
-            if (board[i][0] == 'O') qRegion(board, i, 0);
-            if (board[i][n-1] == 'O') qRegion(board, i, n-1);
-        }
-        replaceOnBoard(board, 'O', 'X');
-        replaceOnBoard(board, 'Q', 'O');
-    }
-}
+// Last updated: 9/21/2026, 3:07:53 PM
+1import java.util.ArrayList;
+2import java.util.List;
+3
+4class Solution {
+5    public List<List<String>> partition(String s) {
+6        int n = s.length();
+7        boolean[][] dp = new boolean[n][n];
+8        for (int i = 0; i < n; i++) {
+9            for (int j = 0; j <= i; j++) {
+10                if (s.charAt(j) == s.charAt(i) && (i - j <= 2 || dp[j + 1][i - 1])) {
+11                    dp[j][i] = true;
+12                }
+13            }
+14        }
+15
+16        List<List<String>> result = new ArrayList<>();
+17        backtrack(s, 0, dp, new ArrayList<>(), result);
+18        return result;
+19    }
+20
+21    private void backtrack(String s, int start, boolean[][] dp, List<String> current, List<List<String>> result) {
+22        if (start == s.length()) {
+23            result.add(new ArrayList<>(current));
+24            return;
+25        }
+26
+27        for (int end = start; end < s.length(); end++) {
+28            if (dp[start][end]) {
+29                current.add(s.substring(start, end + 1));
+30                backtrack(s, end + 1, dp, current, result);
+31                current.remove(current.size() - 1);
+32            }
+33        }
+34    }
+35}
