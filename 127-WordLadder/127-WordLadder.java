@@ -1,57 +1,22 @@
-// Last updated: 9/21/2026, 3:08:24 PM
-import java.util.AbstractList;
-class Solution {
-    private List<List<String>> myList;
-    public List<List<String>> partition(String s) {
-         return new AbstractList<List<String>>(){
-            @Override 
-            public int size(){
-                init();
-                return myList.size();
-            }
-            @Override
-            public List<String> get (int i){
-                init();
-                return myList.get(i);
-            }
-
-            private void init(){
-                if (myList != null) return;
-                myList = new ArrayList<>();
-                generator(new ArrayList<String>(), s, "", 0);
-            }
-        };
-    }
-
-    private void generator(List<String> list, String s, String a, int i){
-        if (i == s.length()){
-            if (!a.isEmpty() && checker(a)) {
-                list.add(a);
-                myList.add(new ArrayList<>(list));
-                list.remove(list.size()-1);
-                return;
-            }
-            else {
-                return;
-            }
-        } 
-        a+=s.charAt(i);
-        if (checker(a)){
-            list.add(a);
-            generator(list, s, "", i+1);
-            list.remove(list.size()-1);
-        }
-        generator(list, s, a, i+1);
-    }
-
-    private boolean checker(String a){
-        int i = 0;
-        int j = a.length()-1;
-        while (i < j){
-            if (a.charAt(i) != a.charAt(j)) return false;
-            i++;
-            j--;
-        }
-        return true;
-    }
-}
+// Last updated: 9/21/2026, 3:09:11 PM
+1class Solution {
+2    public int minCut(String s) {
+3        int n = s.length();
+4        char[] c = s.toCharArray();
+5        int[] cut = new int[n];
+6        boolean[][] isPal = new boolean[n][n];
+7
+8        for (int i = 0; i < n; i++) {
+9            int min = i;
+10            for (int j = 0; j <= i; j++) {
+11                if (c[j] == c[i] && (i - j <= 1 || isPal[j + 1][i - 1])) {
+12                    isPal[j][i] = true;
+13                    min = j == 0 ? 0 : Math.min(min, cut[j - 1] + 1);
+14                }
+15            }
+16            cut[i] = min;
+17        }
+18
+19        return cut[n - 1];
+20    }
+21}
