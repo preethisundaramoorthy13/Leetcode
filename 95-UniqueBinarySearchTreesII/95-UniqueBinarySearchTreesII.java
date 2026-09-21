@@ -1,4 +1,4 @@
-// Last updated: 9/21/2026, 1:26:35 PM
+// Last updated: 9/21/2026, 1:27:09 PM
 1class Solution {
 2    public boolean isBalanced(TreeNode root) {
 3        return checkHeight(root) != -1;
