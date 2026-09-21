@@ -1,36 +1,27 @@
-// Last updated: 9/21/2026, 1:18:35 PM
-1import java.util.ArrayList;
-2import java.util.List;
-3
-4class Solution {
-5    public List<TreeNode> generateTrees(int n) {
-6        if (n == 0) {
-7            return new ArrayList<>();
-8        }
-9        return buildTrees(1, n);
-10    }
-11
-12    private List<TreeNode> buildTrees(int start, int end) {
-13        List<TreeNode> allTrees = new ArrayList<>();
-14        if (start > end) {
-15            allTrees.add(null);
-16            return allTrees;
-17        }
-18
-19        for (int i = start; i <= end; i++) {
-20            List<TreeNode> leftSubtrees = buildTrees(start, i - 1);
-21            List<TreeNode> rightSubtrees = buildTrees(i + 1, end);
-22
-23            for (TreeNode left : leftSubtrees) {
-24                for (TreeNode right : rightSubtrees) {
-25                    TreeNode root = new TreeNode(i);
-26                    root.left = left;
-27                    root.right = right;
-28                    allTrees.add(root);
-29                }
-30            }
-31        }
-32
-33        return allTrees;
-34    }
-35}
+// Last updated: 9/21/2026, 1:19:58 PM
+1class Solution {
+2    public boolean isInterleave(String s1, String s2, String s3) {
+3        if (s1.length() + s2.length() != s3.length()) {
+4            return false;
+5        }
+6        return dfs(s1.toCharArray(), s2.toCharArray(), s3.toCharArray(), 0, 0, 0, new boolean[s1.length() + 1][s2.length() + 1]);
+7    }
+8
+9    private boolean dfs(char[] c1, char[] c2, char[] c3, int i, int j, int k, boolean[][] invalid) {
+10        if (invalid[i][j]) {
+11            return false;
+12        }
+13        if (k == c3.length) {
+14            return true;
+15        }
+16
+17        boolean valid = (i < c1.length && c1[i] == c3[k] && dfs(c1, c2, c3, i + 1, j, k + 1, invalid)) ||
+18                        (j < c2.length && c2[j] == c3[k] && dfs(c1, c2, c3, i, j + 1, k + 1, invalid));
+19
+20        if (!valid) {
+21            invalid[i][j] = true;
+22        }
+23
+24        return valid;
+25    }
+26}
