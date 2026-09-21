@@ -1,50 +1,40 @@
-// Last updated: 9/21/2026, 5:44:46 PM
-1class Solution {
-2    public ListNode sortList(ListNode head) {
-3        if (head == null || head.next == null) {
-4            return head;
-5        }
-6
-7        ListNode prev = null;
-8        ListNode slow = head;
-9        ListNode fast = head;
+// Last updated: 9/21/2026, 5:46:40 PM
+1import java.util.HashMap;
+2import java.util.Map;
+3
+4class Solution {
+5    public int maxPoints(int[][] points) {
+6        int n = points.length;
+7        if (n <= 2) {
+8            return n;
+9        }
 10
-11        while (fast != null && fast.next != null) {
-12            prev = slow;
-13            slow = slow.next;
-14            fast = fast.next.next;
-15        }
-16
-17        prev.next = null;
-18
-19        ListNode l1 = sortList(head);
-20        ListNode l2 = sortList(slow);
+11        int max = 0;
+12
+13        for (int i = 0; i < n; i++) {
+14            Map<Double, Integer> map = new HashMap<>();
+15            int x1 = points[i][0];
+16            int y1 = points[i][1];
+17
+18            for (int j = i + 1; j < n; j++) {
+19                int x2 = points[j][0];
+20                int y2 = points[j][1];
 21
-22        return merge(l1, l2);
-23    }
-24
-25    private ListNode merge(ListNode l1, ListNode l2) {
-26        ListNode dummy = new ListNode(0);
-27        ListNode curr = dummy;
-28
-29        while (l1 != null && l2 != null) {
-30            if (l1.val < l2.val) {
-31                curr.next = l1;
-32                l1 = l1.next;
-33            } else {
-34                curr.next = l2;
-35                l2 = l2.next;
-36            }
-37            curr = curr.next;
-38        }
-39
-40        if (l1 != null) {
-41            curr.next = l1;
-42        }
-43        if (l2 != null) {
-44            curr.next = l2;
-45        }
-46
-47        return dummy.next;
-48    }
-49}
+22                double slope;
+23                if (x1 == x2) {
+24                    slope = Double.POSITIVE_INFINITY;
+25                } else if (y1 == y2) {
+26                    slope = 0.0;
+27                } else {
+28                    slope = (double) (y2 - y1) / (x2 - x1);
+29                }
+30
+31                int count = map.getOrDefault(slope, 1) + 1;
+32                map.put(slope, count);
+33                max = Math.max(max, count);
+34            }
+35        }
+36
+37        return max;
+38    }
+39}
