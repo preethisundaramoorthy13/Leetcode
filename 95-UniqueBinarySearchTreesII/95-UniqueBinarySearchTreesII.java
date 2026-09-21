@@ -1,4 +1,4 @@
-// Last updated: 9/21/2026, 1:19:58 PM
+// Last updated: 9/21/2026, 1:20:02 PM
 1class Solution {
 2    public boolean isInterleave(String s1, String s2, String s3) {
 3        if (s1.length() + s2.length() != s3.length()) {
