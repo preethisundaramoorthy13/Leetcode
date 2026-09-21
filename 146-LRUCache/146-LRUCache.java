@@ -1,31 +1,50 @@
-// Last updated: 9/21/2026, 5:44:08 PM
+// Last updated: 9/21/2026, 5:44:46 PM
 1class Solution {
-2    public ListNode insertionSortList(ListNode head) {
+2    public ListNode sortList(ListNode head) {
 3        if (head == null || head.next == null) {
 4            return head;
 5        }
 6
-7        ListNode dummy = new ListNode(0);
-8        ListNode curr = head;
-9        ListNode prev = dummy;
-10        ListNode next = null;
-11
-12        while (curr != null) {
-13            next = curr.next;
-14
-15            if (prev.next != null && prev.next.val > curr.val) {
-16                prev = dummy;
-17            }
+7        ListNode prev = null;
+8        ListNode slow = head;
+9        ListNode fast = head;
+10
+11        while (fast != null && fast.next != null) {
+12            prev = slow;
+13            slow = slow.next;
+14            fast = fast.next.next;
+15        }
+16
+17        prev.next = null;
 18
-19            while (prev.next != null && prev.next.val < curr.val) {
-20                prev = prev.next;
-21            }
-22
-23            curr.next = prev.next;
-24            prev.next = curr;
-25            curr = next;
-26        }
-27
-28        return dummy.next;
-29    }
-30}
+19        ListNode l1 = sortList(head);
+20        ListNode l2 = sortList(slow);
+21
+22        return merge(l1, l2);
+23    }
+24
+25    private ListNode merge(ListNode l1, ListNode l2) {
+26        ListNode dummy = new ListNode(0);
+27        ListNode curr = dummy;
+28
+29        while (l1 != null && l2 != null) {
+30            if (l1.val < l2.val) {
+31                curr.next = l1;
+32                l1 = l1.next;
+33            } else {
+34                curr.next = l2;
+35                l2 = l2.next;
+36            }
+37            curr = curr.next;
+38        }
+39
+40        if (l1 != null) {
+41            curr.next = l1;
+42        }
+43        if (l2 != null) {
+44            curr.next = l2;
+45        }
+46
+47        return dummy.next;
+48    }
+49}
