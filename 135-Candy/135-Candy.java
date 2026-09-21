@@ -1,36 +1,14 @@
-// Last updated: 9/21/2026, 5:08:32 PM
-class Solution {
-
-    static {
-        for (int i = 0; i < 500; i++) {
-            candy(new int[]{0, 0});
-        }
-    }
-
-    public static int candy(int[] ratings) {
-        int[] candies = new int[ratings.length];
-        int ans = ratings.length;
-
-        // Left to Right
-        for (int i = 1; i < ratings.length; i++) {
-            if (ratings[i] > ratings[i - 1]) {
-                int addMore = candies[i - 1] + 1 - candies[i];
-                candies[i] += addMore;
-                ans += addMore;
-            }
-        }
-
-        // Right to Left
-        for (int i = ratings.length - 2; i >= 0; i--) {
-            if (ratings[i] > ratings[i + 1]) {
-                int addMore = candies[i + 1] + 1 - candies[i];
-                if (addMore > 0) {
-                    candies[i] += addMore;
-                    ans += addMore;
-                }
-            }
-        }
-
-        return ans;
-    }
-}
+// Last updated: 9/21/2026, 5:23:28 PM
+1class Solution {
+2    public int singleNumber(int[] nums) {
+3        int ones = 0;
+4        int twos = 0;
+5
+6        for (int num : nums) {
+7            ones = (ones ^ num) & ~twos;
+8            twos = (twos ^ num) & ~ones;
+9        }
+10
+11        return ones;
+12    }
+13}
