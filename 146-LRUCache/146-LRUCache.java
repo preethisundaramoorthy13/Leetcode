@@ -1,49 +1,35 @@
-// Last updated: 9/21/2026, 5:57:21 PM
-1import java.util.Arrays;
-2
-3class Solution {
-4    public int maximumGap(int[] nums) {
-5        if (nums == null || nums.length < 2) {
-6            return 0;
-7        }
-8
-9        int min = nums[0];
-10        int max = nums[0];
-11        for (int num : nums) {
-12            min = Math.min(min, num);
-13            max = Math.max(max, num);
-14        }
-15
-16        if (min == max) {
-17            return 0;
-18        }
-19
-20        int n = nums.length;
-21        int bucketSize = Math.max(1, (max - min) / (n - 1));
-22        int bucketCount = (max - min) / bucketSize + 1;
-23
-24        int[] minBucket = new int[bucketCount];
-25        int[] maxBucket = new int[bucketCount];
-26        Arrays.fill(minBucket, Integer.MAX_VALUE);
-27        Arrays.fill(maxBucket, Integer.MIN_VALUE);
-28
-29        for (int num : nums) {
-30            int idx = (num - min) / bucketSize;
-31            minBucket[idx] = Math.min(minBucket[idx], num);
-32            maxBucket[idx] = Math.max(maxBucket[idx], num);
-33        }
-34
-35        int maxGap = 0;
-36        int prevMax = min;
-37
-38        for (int i = 0; i < bucketCount; i++) {
-39            if (minBucket[i] == Integer.MAX_VALUE) {
-40                continue;
-41            }
-42            maxGap = Math.max(maxGap, minBucket[i] - prevMax);
-43            prevMax = maxBucket[i];
-44        }
-45
-46        return maxGap;
-47    }
-48}
+// Last updated: 9/21/2026, 5:58:01 PM
+1class Solution {
+2    public int compareVersion(String version1, String version2) {
+3        int n1 = version1.length();
+4        int n2 = version2.length();
+5        int i = 0;
+6        int j = 0;
+7
+8        while (i < n1 || j < n2) {
+9            int num1 = 0;
+10            while (i < n1 && version1.charAt(i) != '.') {
+11                num1 = num1 * 10 + (version1.charAt(i) - '0');
+12                i++;
+13            }
+14
+15            int num2 = 0;
+16            while (j < n2 && version2.charAt(j) != '.') {
+17                num2 = num2 * 10 + (version2.charAt(j) - '0');
+18                j++;
+19            }
+20
+21            if (num1 < num2) {
+22                return -1;
+23            }
+24            if (num1 > num2) {
+25                return 1;
+26            }
+27
+28            i++;
+29            j++;
+30        }
+31
+32        return 0;
+33    }
+34}
