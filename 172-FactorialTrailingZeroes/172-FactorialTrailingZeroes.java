@@ -1,44 +1,31 @@
-// Last updated: 9/22/2026, 9:32:45 AM
-1import java.util.ArrayDeque;
-2import java.util.Deque;
-3
-4/**
-5 * Definition for a binary tree node.
-6 * public class TreeNode {
-7 *     int val;
-8 *     TreeNode left;
-9 *     TreeNode right;
-10 *     TreeNode() {}
-11 *     TreeNode(int val) { this.val = val; }
-12 *     TreeNode(int val, TreeNode left, TreeNode right) {
-13 *         this.val = val;
-14 *         this.left = left;
-15 *         this.right = right;
-16 *     }
-17 * }
-18 */
-19class BSTIterator {
-20    private Deque<TreeNode> stack;
-21
-22    public BSTIterator(TreeNode root) {
-23        stack = new ArrayDeque<>();
-24        pushAllLeft(root);
-25    }
-26    
-27    public int next() {
-28        TreeNode currentNode = stack.pop();
-29        pushAllLeft(currentNode.right);
-30        return currentNode.val;
-31    }
-32    
-33    public boolean hasNext() {
-34        return !stack.isEmpty();
-35    }
-36
-37    private void pushAllLeft(TreeNode node) {
-38        while (node != null) {
-39            stack.push(node);
-40            node = node.left;
-41        }
-42    }
-43}
+// Last updated: 9/22/2026, 9:33:40 AM
+1class Solution {
+2    public int calculateMinimumHP(int[][] dungeon) {
+3        int m = dungeon.length;
+4        int n = dungeon[0].length;
+5        
+6        // dp[i][j] represents the minimum HP required when entering cell (i, j)
+7        int[][] dp = new int[m + 1][n + 1];
+8        
+9        // Initialize table with infinity to handle boundary constraints
+10        for (int i = 0; i <= m; i++) {
+11            for (int j = 0; j <= n; j++) {
+12                dp[i][j] = Integer.MAX_VALUE;
+13            }
+14        }
+15        
+16        // Base cases: neighboring boundaries of the destination cell require at least 1 HP
+17        dp[m][n - 1] = 1;
+18        dp[m - 1][n] = 1;
+19        
+20        // Bottom-up computation from bottom-right to top-left
+21        for (int i = m - 1; i >= 0; i--) {
+22            for (int j = n - 1; j >= 0; j--) {
+23                int minHealthOnExit = Math.min(dp[i + 1][j], dp[i][j + 1]);
+24                dp[i][j] = Math.max(1, minHealthOnExit - dungeon[i][j]);
+25            }
+26        }
+27        
+28        return dp[0][0];
+29    }
+30}
